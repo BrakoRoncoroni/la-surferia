@@ -60,12 +60,8 @@ button:hover {
   font-size: 1em;
 }
 
-@media (max-width: 768px){
-  body {
-  font-family: 'Arial', sans-serif;
-  background: #e0f7fa;
-  color: #004d40;
-}
+@media screen and (max-width: 767px){
+
 #productos {
   display: flex;
   flex-direction: column;
