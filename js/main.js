@@ -4,7 +4,7 @@ const tablas = [
     nombre: "Shortboard Pro", 
     precio: 120000 },
   { id: 2, 
-    nombre: "Longboard Classic", 
+    nombre: "Longboard Malibu", 
     precio: 150000 },
   { id: 3, 
     nombre: "Fish Retro", 
