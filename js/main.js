@@ -1,22 +1,19 @@
-// Lista de tablas de surf disponibles
-const tablas = [
-  { id: 1, 
-    nombre: "Shortboard Pro", 
-    precio: 120000 },
-  { id: 2, 
-    nombre: "Longboard Malibu", 
-    precio: 150000 },
-  { id: 3, 
-    nombre: "Fish Retro", 
-    precio: 130000 },
-  { id: 4, 
-    nombre: "Funboard School", 
-    precio: 110000 },
-];
-
 let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+let tablas = [];
 
-// Mostrar productos
+// Cargar datos desde JSON simulado
+fetch("../data/tablas.json")
+  .then((res) => res.json())
+  .then((data) => {
+    tablas = data;
+    mostrarTablas();
+    actualizarCarrito();
+  })
+  .catch(() => {
+    Swal.fire("Error", "No se pudieron cargar los productos", "error");
+  });
+
+// Mostrar productos dinámicamente
 function mostrarTablas() {
   const contenedor = document.getElementById("productos");
   contenedor.innerHTML = "";
@@ -33,15 +30,23 @@ function mostrarTablas() {
   });
 }
 
-// Agregar al carrito
+// Agregar producto al carrito
 function agregarAlCarrito(id) {
   const tabla = tablas.find((item) => item.id === id);
   carrito.push(tabla);
   guardarCarrito();
   actualizarCarrito();
+
+  Swal.fire({
+    icon: "success",
+    title: "Producto agregado",
+    text: `${tabla.nombre} se agregó al carrito.`,
+    timer: 1500,
+    showConfirmButton: false
+  });
 }
 
-// Actualizar el carrito
+// Actualizar carrito en HTML
 function actualizarCarrito() {
   const lista = document.getElementById("carrito");
   const total = document.getElementById("total");
@@ -54,10 +59,10 @@ function actualizarCarrito() {
   });
 
   const sumaTotal = carrito.reduce((acc, item) => acc + item.precio, 0);
-  total.textContent = sumaTotal;
+  total.textContent = sumaTotal.toFixed(2);
 }
 
-// Guardar en localStorage
+// Guardar carrito en localStorage
 function guardarCarrito() {
   localStorage.setItem("carrito", JSON.stringify(carrito));
 }
@@ -67,24 +72,29 @@ document.getElementById("vaciarCarrito").addEventListener("click", () => {
   carrito = [];
   guardarCarrito();
   actualizarCarrito();
+
+  Swal.fire("Carrito vacío", "Se han eliminado todos los productos.", "info");
 });
 
-// Inicializar app
-mostrarTablas();
-actualizarCarrito();
+// Aplicar descuento
+document.getElementById("descuento").addEventListener("click", () => {
+  const input = document.getElementById("cupon").value.trim();
+  const codigoValido = "CODER-SURFEA";
+  const totalTexto = document.getElementById("total");
+  const totalNumero = parseFloat(totalTexto.textContent);
 
-let descuento = document.getElementById("descuento");
-descuento.addEventListener("click", function(){
-  let input = document.getElementById("cupon");
-  let codigoValido = "CODER-SURFEA";
+  if (input.toLowerCase() === codigoValido.toLowerCase()) {
+    const totalConDescuento = totalNumero * 0.65;
+    totalTexto.innerHTML = `${totalConDescuento.toFixed(2)} <span class="descuento-aplicado">35% OFF aplicado</span>`;
 
-  let totalTexto = document.getElementById("total");
-  let totalNumero = parseFloat(totalTexto.textContent);
-
-  if (input.value.toLowerCase() === codigoValido.toLowerCase()) {
-    let totalConDescuento = totalNumero * 0.65;
-totalTexto.innerHTML = `${totalConDescuento.toFixed(2)} <span class="descuento-aplicado">35% OFF aplicado</span>`;
+    Swal.fire({
+      icon: "success",
+      title: "¡Descuento aplicado!",
+      text: "Obtuviste un 35% de descuento.",
+      timer: 2000,
+      showConfirmButton: false
+    });
   } else {
-    alert("Código incorrecto");
+    Swal.fire("Código inválido", "El código ingresado no es correcto.", "warning");
   }
 });

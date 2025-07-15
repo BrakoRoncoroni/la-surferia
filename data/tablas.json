@@ -1,0 +1,6 @@
+[
+  { "id": 1, "nombre": "Shortboard Pro", "precio": 120000 },
+  { "id": 2, "nombre": "Longboard Malibu", "precio": 150000 },
+  { "id": 3, "nombre": "Fish Retro", "precio": 130000 },
+  { "id": 4, "nombre": "Funboard School", "precio": 110000 }
+]
